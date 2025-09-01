@@ -1,6 +1,6 @@
 # RSpec: Equality & Comparison Matchers
 
-Welcome to Lesson 12! In this lesson, you'll learn about RSpec's equality and comparison matchers: `eq`, `eql`, `equal`, and the comparison matchers `>`, `<`, `>=`, `<=`. We'll break down what each matcher does, when to use them, and how to avoid common pitfalls. As always, you'll see file path comments, code block language annotations, and plenty of examples.
+In this lesson, you'll learn about RSpec's equality and comparison matchers: `eq`, `eql`, `equal`, and the comparison matchers `>`, `<`, `>=`, `<=`. We'll break down what each matcher does, when to use them, and how to avoid common pitfalls. As always, you'll see file path comments, code block language annotations, and plenty of examples.
 
 _Recall from previous lessons: All of these matchers are used with `expect` to set up your test's expectations._
 
