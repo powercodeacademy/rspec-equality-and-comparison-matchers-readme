@@ -9,32 +9,50 @@ _Recall from previous lessons: All of these matchers are used with `expect` to s
 ## Equality Matchers: eq, eql, equal
 
 ```ruby
-# /spec/equality_matchers_spec.rb
-RSpec.describe "Equality Matchers" do
-  it "demonstrates eq matcher" do
-    expect(2 + 2).to eq(4) # passes if values are ==
+# /spec/equality_spec.rb
+RSpec.describe 'Recipe and RecipeRating equality and comparison matchers' do
+  let(:recipe1) { Recipe.new('Pancakes', RecipeRating.new(5, 'Alice')) }
+  let(:recipe2) { Recipe.new('Waffles', RecipeRating.new(4, 'Bob')) }
+  let(:rating_a) { RecipeRating.new(5, 'Alice') }
+  let(:rating_b) { RecipeRating.new(5, 'Alice') }
+  let(:rating_c) { RecipeRating.new(5, 'Bob') }
+  let(:rating_d) { RecipeRating.new(4, 'Alice') }
+
+  describe 'eq matcher' do
+    it 'checks value equality for numbers' do
+      expect(recipe1.rating.value).to eq(5)
+    end
+
+    it 'checks value equality for RecipeRating objects' do
+      expect(rating_a).to eq(rating_b)
+    end
   end
 
-  it "demonstrates eql matcher (same type)" do
-    expect(2.0).to eql(2.0) # passes if values and types are the same
+  describe 'eql matcher' do
+    it 'checks value and type for numbers' do
+      expect(5).to eql(5)
+      expect(5).not_to eql(5.0)
+    end
+
+    it 'checks value and reviewer for RecipeRating' do
+      expect(rating_a).to eql(rating_b)
+      expect(rating_a).not_to eql(rating_c)
+    end
   end
 
-  it "demonstrates eql matcher (different type)" do
-    expect(2).not_to eql(2.0) # fails because 2 (Integer) != 2.0 (Float)
-  end
+  describe 'equal matcher' do
+    it 'checks object identity for RecipeRating' do
+      expect(rating_a).not_to equal(rating_b)
+      expect(rating_a).to equal(rating_a)
+    end
 
-  it "demonstrates eq vs eql edge case" do
-    expect(2).to eq(2.0)   # passes: 2 == 2.0
-    expect(2).not_to eql(2.0) # fails: 2 is not the same type as 2.0
+    it 'checks object identity for strings' do
+      a = 'hello'
+      b = 'hello'
+      expect(a).not_to equal(b)
+      expect(a).to eq(b)
+    end
   end
-
-  it "demonstrates equal matcher" do
-    a = "hello"
-    b = a
-    expect(a).to equal(b) # passes if a and b are the same object
-    expect(a).not_to equal("hello") # fails: different objects with same value
-  end
-end
 ```
 
 **Sample Output (passing):**
@@ -65,25 +83,37 @@ Failure/Error: expect(2).not_to eql(2.0)
 
 Comparison matchers let you check numeric relationships directly. These use the actual comparison operators, not equality (`==`).
 
-```ruby
-# /spec/comparison_matchers_spec.rb
-RSpec.describe "Comparison Matchers" do
-  it "checks greater than" do
-    expect(5).to be > 3 # passes if 5 > 3
+  describe 'comparison matchers' do
+    it 'checks greater than for rating values' do
+      expect(recipe1.rating.value).to be > recipe2.rating.value
+    end
+
+    it 'checks less than or equal to for rating values' do
+      expect(recipe2.rating.value).to be <= recipe1.rating.value
+    end
+
+    it 'checks less than for rating values' do
+      expect(recipe2.rating.value).to be < recipe1.rating.value
+    end
+
+    it 'checks greater than or equal to for rating values' do
+      expect(recipe1.rating.value).to be >= recipe2.rating.value
+    end
   end
 
-  it "checks less than or equal to" do
-    expect(3).to be <= 3 # passes if 3 <= 3
-  end
+  describe 'pending specs for students' do
+    it 'is pending: test that two Recipe objects with same name and rating are eq but not equal' do
+      pending("Student: Write a spec for eq vs equal on Recipe objects")
+      raise "Unimplemented pending spec"
+    end
 
-  it "checks less than" do
-    expect(2).to be < 5 # passes if 2 < 5
-  end
-
-  it "checks greater than or equal to" do
-    expect(10).to be >= 10 # passes if 10 >= 10
+    it 'is pending: test that a RecipeRating with higher value is greater than another' do
+      pending("Student: Write a spec for > on RecipeRating objects")
+      raise "Unimplemented pending spec"
+    end
   end
 end
+
 ```
 
 **Sample Output (passing):**
@@ -106,13 +136,43 @@ Finished in 0.01 seconds (files took 0.1 seconds to load)
 - `equal` checks object identity (`.equal?`).
 - Use comparison matchers for numeric comparisons, not `eq`—`eq` can pass for numbers of different types (e.g., 2 and 2.0), but `eql` will not.
 
-## Practice Prompts
+---
 
-Try these exercises to reinforce your learning. For each, write your own spec in the appropriate file (e.g., `/spec/equality_matchers_spec.rb`).
+## Getting Hands-On: Student Instructions
 
-1. Write specs using `eq`, `eql`, and `equal` for different data types (integers, floats, strings, arrays).
-2. Write specs using `>`, `<`, `>=`, and `<=` for numbers. Try with both integers and floats.
-3. Try to make a test fail by mixing up `eq` and `equal`—what happens? What does the failure message tell you?
+This lesson repo is set up for you to get hands-on practice with RSpec's equality and comparison matchers using a real-world recipe domain (Recipe/RecipeRating).
+
+**To get started:**
+
+1. **Fork and Clone** this repository to your own GitHub account and local machine.
+2. **Install dependencies:**
+
+    ```sh
+      bundle install
+    ```
+
+3. **Run the specs:**
+
+    ```sh
+      bin/rspec
+    ```
+
+4. **Explore the code:**
+
+    - The main domain code is in `lib/recipe_rating.rb`.
+    - The robust example specs are in `spec/equality_spec.rb`.
+
+5. **Implement the pending specs:**
+
+    - There are at least two pending specs marked with `pending` in `spec/equality_spec.rb`.
+    - Your task: Remove the `pending` line and implement the expectation so the spec passes.
+
+6. **Experiment:**
+
+    - Try adding your own examples using `eq`, `eql`, `equal`, and comparison matchers.
+    - Make the specs fail on purpose to see the error messages and learn from them.
+
+All specs should pass except the pending ones. When you finish, all specs should be green!
 
 ---
 
