@@ -8,6 +8,14 @@ _Recall from previous lessons: All of these matchers are used with `expect` to s
 
 ## Equality Matchers: eq, eql, equal
 
+RSpec provides three main equality matchers, each with a different purpose:
+
+- **`eq`**: Checks value equality using Ruby's `==` operator. Use this when you want to verify that two objects have the same value, regardless of their type or identity.
+- **`eql`**: Checks both value and type equality using Ruby's `eql?` method. Use this when you want to ensure that two objects are not only equal in value but also of the same type.
+- **`equal`**: Checks object identity using Ruby's `equal?` method. Use this when you want to confirm that two references point to the exact same object in memory.
+
+Below are examples demonstrating how each matcher works:
+
 ```ruby
 # /spec/equality_spec.rb
 RSpec.describe 'Recipe and RecipeRating equality and comparison matchers' do
@@ -81,8 +89,15 @@ Failure/Error: expect(2).not_to eql(2.0)
 
 ## Comparison Matchers: >, <, >=, <=
 
-Comparison matchers let you check numeric relationships directly. These use the actual comparison operators, not equality (`==`).
+Comparison matchers in RSpec let you check numeric relationships directly, such as greater than, less than, and so on. These matchers use Ruby's actual comparison operators (`>`, `<`, `>=`, `<=`) to compare values.
 
+To use these matchers, you combine them with the `be` matcher. The `be` matcher is a generic matcher that can be used with comparison operators to express expectations about numeric relationships. For example, `expect(x).to be > y` checks that `x` is greater than `y`.
+
+Why use `be`? In RSpec, `be` acts as a bridge to allow you to use Ruby's built-in comparison operators in your expectations. This makes your tests more readable and expressive, closely mirroring how you would write comparisons in regular Ruby code.
+
+Below are examples demonstrating how to use comparison matchers with `be`:
+
+```ruby
   describe 'comparison matchers' do
     it 'checks greater than for rating values' do
       expect(recipe1.rating.value).to be > recipe2.rating.value
@@ -98,18 +113,6 @@ Comparison matchers let you check numeric relationships directly. These use the 
 
     it 'checks greater than or equal to for rating values' do
       expect(recipe1.rating.value).to be >= recipe2.rating.value
-    end
-  end
-
-  describe 'pending specs for students' do
-    it 'is pending: test that two Recipe objects with same name and rating are eq but not equal' do
-      pending("Student: Write a spec for eq vs equal on Recipe objects")
-      raise "Unimplemented pending spec"
-    end
-
-    it 'is pending: test that a RecipeRating with higher value is greater than another' do
-      pending("Student: Write a spec for > on RecipeRating objects")
-      raise "Unimplemented pending spec"
     end
   end
 end
@@ -128,13 +131,6 @@ Comparison Matchers
 Finished in 0.01 seconds (files took 0.1 seconds to load)
 4 examples, 0 failures
 ```
-
-## Common Pitfalls
-
-- `eq` checks value equality (`==`), not object identity.
-- `eql` checks value and type.
-- `equal` checks object identity (`.equal?`).
-- Use comparison matchers for numeric comparisons, not `eq`—`eq` can pass for numbers of different types (e.g., 2 and 2.0), but `eql` will not.
 
 ---
 
